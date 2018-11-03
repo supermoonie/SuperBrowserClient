@@ -54,6 +54,7 @@ public class CommandInterceptor implements MethodInterceptor {
             json.put("params", params);
         }
         String message = json.toJSONString();
+        System.out.println("send: " + message);
         WebSocketContext context = new WebSocketContext();
         contexts.put(id, context);
         webSocket.send(message);

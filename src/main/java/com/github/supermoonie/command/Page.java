@@ -10,6 +10,13 @@ import com.github.supermoonie.annotation.Returns;
 public interface Page extends Command{
 
     /**
+     * navigate
+     *
+     * @param url   url
+     */
+    void navigate(@Param("url") String url);
+
+    /**
      * getUserAgent
      *
      * @return  userAgent

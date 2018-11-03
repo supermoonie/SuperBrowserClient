@@ -14,6 +14,13 @@ import static org.junit.Assert.*;
 public class PageTest {
 
     @Test
+    public void navigate() throws IOException {
+        SuperBrowser superBrowser = new SuperBrowser();
+        superBrowser.getPage().navigate("http://httpbin.org/get");
+        superBrowser.close();
+    }
+
+    @Test
     public void getUserAgent() throws IOException {
         SuperBrowser superBrowser = new SuperBrowser();
         String userAgent = superBrowser.getPage().getUserAgent();

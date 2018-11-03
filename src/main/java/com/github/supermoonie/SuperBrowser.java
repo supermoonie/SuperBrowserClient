@@ -4,7 +4,6 @@ import com.github.supermoonie.command.*;
 import com.github.supermoonie.ws.DefaultWebSocketListener;
 import com.github.supermoonie.ws.WebSocketContext;
 import net.sf.cglib.proxy.Callback;
-import net.sf.cglib.proxy.CallbackFilter;
 import net.sf.cglib.proxy.Enhancer;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -12,7 +11,6 @@ import okhttp3.WebSocket;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
@@ -29,7 +27,6 @@ public class SuperBrowser implements Closeable {
 
     private final Map<Class, Command> proxies = new ConcurrentHashMap<>();
 
-
     public SuperBrowser() {
         OkHttpClient client = new OkHttpClient.Builder().pingInterval(0, TimeUnit.SECONDS).build();
         Request request = new Request.Builder().url("ws://127.0.0.1:9900").build();
@@ -38,8 +35,8 @@ public class SuperBrowser implements Closeable {
         invocationHandler = new CommandInterceptor(contexts, webSocket, 3000);
     }
 
-    public Browser getBrowser() {
-        return (Browser) getProxy(Browser.class);
+    public Window getWindow() {
+        return (Window) getProxy(Window.class);
     }
 
     public Page getPage() {
@@ -66,8 +63,8 @@ public class SuperBrowser implements Closeable {
 
     @Override
     public void close() throws IOException {
-        // TODO
-        // getBrowser().close();
+        getWindow().close();
         webSocket.close(1001, "");
     }
+
 }
