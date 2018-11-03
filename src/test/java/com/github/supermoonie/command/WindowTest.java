@@ -1,6 +1,6 @@
 package com.github.supermoonie.command;
 
-import com.github.supermoonie.SuperBrowser;
+import com.github.supermoonie.browser.SuperBrowser;
 import com.github.supermoonie.type.browser.Bounds;
 import com.github.supermoonie.type.browser.Version;
 import com.github.supermoonie.type.browser.WindowState;
@@ -13,6 +13,7 @@ import java.io.IOException;
  * @date 2018/11/2 17:30
  */
 public class WindowTest {
+
 
     @Test
     public void getVersion() throws IOException {

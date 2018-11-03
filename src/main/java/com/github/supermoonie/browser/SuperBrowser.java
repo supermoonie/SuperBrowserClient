@@ -1,6 +1,8 @@
-package com.github.supermoonie;
+package com.github.supermoonie.browser;
 
 import com.github.supermoonie.command.*;
+import com.github.supermoonie.event.Event;
+import com.github.supermoonie.event.EventListener;
 import com.github.supermoonie.ws.DefaultWebSocketListener;
 import com.github.supermoonie.ws.WebSocketContext;
 import net.sf.cglib.proxy.Callback;
@@ -19,7 +21,7 @@ import java.util.concurrent.TimeUnit;
  * @author supermoonie
  * @date 2018/11/2 11:21
  */
-public class SuperBrowser implements Closeable {
+public class SuperBrowser implements Closeable, WaitUntil {
 
     private WebSocket webSocket;
 
@@ -27,11 +29,13 @@ public class SuperBrowser implements Closeable {
 
     private final Map<Class, Command> proxies = new ConcurrentHashMap<>();
 
+    private final Map<Event, EventListener> eventListeners = new ConcurrentHashMap<>();
+
     public SuperBrowser() {
         OkHttpClient client = new OkHttpClient.Builder().pingInterval(0, TimeUnit.SECONDS).build();
         Request request = new Request.Builder().url("ws://127.0.0.1:9900").build();
         Map<Integer, WebSocketContext> contexts = new ConcurrentHashMap<>();
-        webSocket = client.newWebSocket(request, new DefaultWebSocketListener(contexts));
+        webSocket = client.newWebSocket(request, new DefaultWebSocketListener(contexts, eventListeners));
         invocationHandler = new CommandInterceptor(contexts, webSocket, 3000);
     }
 
@@ -61,10 +65,22 @@ public class SuperBrowser implements Closeable {
         return proxy;
     }
 
+    public void addEventListener(Event event, EventListener listener) {
+        eventListeners.put(event, listener);
+    }
+
+    public void removeEventListener(Event event) {
+        eventListeners.remove(event);
+    }
+
     @Override
     public void close() throws IOException {
         getWindow().close();
         webSocket.close(1001, "");
     }
 
+    @Override
+    public SuperBrowser getThis() {
+        return this;
+    }
 }

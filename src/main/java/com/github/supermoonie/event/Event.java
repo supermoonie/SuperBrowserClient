@@ -5,7 +5,7 @@ package com.github.supermoonie.event;
  * @author Administrator
  * @date 2018/11/3 0003
  */
-public enum Events {
+public enum Event {
 
     /**
      * loadFinished
@@ -15,7 +15,7 @@ public enum Events {
 
     private String name;
 
-    Events(String name) {
+    Event(String name) {
         this.name = name;
     }
 

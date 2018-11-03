@@ -1,11 +1,9 @@
 package com.github.supermoonie.command;
 
-import com.github.supermoonie.SuperBrowser;
+import com.github.supermoonie.browser.SuperBrowser;
 import org.junit.Test;
 
 import java.io.IOException;
-
-import static org.junit.Assert.*;
 
 /**
  * @author supermoonie

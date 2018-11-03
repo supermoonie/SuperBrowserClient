@@ -1,6 +1,8 @@
 package com.github.supermoonie.ws;
 
 import com.alibaba.fastjson.JSONObject;
+import com.github.supermoonie.event.Event;
+import com.github.supermoonie.event.EventListener;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
@@ -15,8 +17,11 @@ public class DefaultWebSocketListener extends WebSocketListener {
 
     private final Map<Integer, WebSocketContext> contexts;
 
-    public DefaultWebSocketListener(Map<Integer, WebSocketContext> contexts) {
+    private final Map<Event, EventListener> eventListeners;
+
+    public DefaultWebSocketListener(Map<Integer, WebSocketContext> contexts, Map<Event, EventListener> eventListeners) {
         this.contexts = contexts;
+        this.eventListeners = eventListeners;
     }
 
     @Override
@@ -28,8 +33,16 @@ public class DefaultWebSocketListener extends WebSocketListener {
     public void onMessage(WebSocket webSocket, String text) {
         System.out.println("receive: " + text);
         JSONObject json = JSONObject.parseObject(text);
+        String eventKey = "event";
         String idKey = "id";
-        if (json.containsKey(idKey)) {
+        if (json.containsKey(eventKey)) {
+            String eventName = json.getString(eventKey);
+            Event event = Event.valueOf(eventName);
+            EventListener listener = eventListeners.remove(event);
+            if (null != listener) {
+                listener.onEvent(webSocket, json.getJSONObject("result"));
+            }
+        } else if (json.containsKey(idKey)) {
             int id = json.getIntValue(idKey);
             WebSocketContext context = contexts.remove(id);
             if(null != context) {
