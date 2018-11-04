@@ -20,14 +20,20 @@ public interface WaitUntil {
      */
     default void navigateUntilLoadFinished(String url, long ms) {
         CountDownLatch latch = new CountDownLatch(1);
+        long start = System.currentTimeMillis();
         getThis().addEventListener(Event.loadFinished,  (webSocket, data) -> latch.countDown());
         getThis().getPage().navigate(url);
         try {
             latch.await(ms, TimeUnit.MILLISECONDS);
+            if (System.currentTimeMillis() - start >= ms) {
+                throw new LoadTimeOutException("Page not load finish in " + ms + " milliseconds");
+            }
         } catch (InterruptedException e) {
             throw new LoadTimeOutException(e);
         }
     }
+
+
 
     /**
      * get SuperBrowser
