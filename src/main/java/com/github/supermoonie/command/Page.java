@@ -17,6 +17,14 @@ public interface Page extends Command{
     void navigate(@Param("url") String url);
 
     /**
+     * currentUrl
+     *
+     * @return  current url
+     */
+    @Returns("currentUrl")
+    String currentUrl();
+
+    /**
      * getUserAgent
      *
      * @return  userAgent

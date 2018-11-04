@@ -7,6 +7,7 @@ import com.github.supermoonie.type.browser.WindowState;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 
 /**
  * @author supermoonie
@@ -57,6 +58,40 @@ public class WindowTest {
         superBrowser.getWindow().setWindowBounds(bounds);
         superBrowser.getWindow().setWindowBounds(0, 0, 800, 600);
         superBrowser.close();
+    }
+
+    @Test
+    public void hasAlert() {
+        SuperBrowser superBrowser = new SuperBrowser();
+        String path = Paths.get("src/test/resources/AlertHtml.html").toAbsolutePath().toUri().toString();
+        superBrowser.navigateUntilLoadFinished(path, 5000);
+        boolean exist = superBrowser.getWindow().hasAlert();
+        System.out.println("exist: " + exist);
+    }
+
+    @Test
+    public void alertText() {
+        SuperBrowser superBrowser = new SuperBrowser();
+        String path = Paths.get("src/test/resources/AlertHtml.html").toAbsolutePath().toUri().toString();
+        superBrowser.navigateUntilLoadFinished(path, 5000);
+        boolean exist = superBrowser.getWindow().hasAlert();
+        if (exist) {
+            String text = superBrowser.getWindow().alertText();
+            System.out.println("text: " + text);
+        }
+    }
+
+    @Test
+    public void closeAlert() {
+        SuperBrowser superBrowser = new SuperBrowser();
+        String path = Paths.get("src/test/resources/AlertHtml.html").toAbsolutePath().toUri().toString();
+        superBrowser.navigateUntilLoadFinished(path, 3000);
+        boolean exist = superBrowser.getWindow().hasAlert();
+        if (exist) {
+            String text = superBrowser.getWindow().alertText();
+            System.out.println("text: " + text);
+            superBrowser.getWindow().closeAlert();
+        }
     }
 
     @Test

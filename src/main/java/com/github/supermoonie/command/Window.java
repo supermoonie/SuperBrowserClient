@@ -59,6 +59,27 @@ public interface Window extends Command {
     void setWindowBounds(@Param("x") int x, @Param("y") int y, @Param("width") int width, @Param("height") int height);
 
     /**
+     * hasAlert
+     *
+     * @return  is exist
+     */
+    @Returns("exist")
+    boolean hasAlert();
+
+    /**
+     * alert text
+     *
+     * @return  text
+     */
+    @Returns("text")
+    String alertText();
+
+    /**
+     * close alert
+     */
+    void closeAlert();
+
+    /**
      * close
      */
     void close();

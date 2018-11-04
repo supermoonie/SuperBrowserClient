@@ -12,10 +12,17 @@ import java.io.IOException;
 public class PageTest {
 
     @Test
-    public void navigate() throws IOException {
+    public void navigate() {
         SuperBrowser superBrowser = new SuperBrowser();
         superBrowser.getPage().navigate("http://httpbin.org/get");
-        superBrowser.close();
+    }
+
+    @Test
+    public void currentUrl() {
+        SuperBrowser superBrowser = new SuperBrowser();
+        superBrowser.navigateUntilLoadFinished("http://httpbin.org/get", 5000);
+        String currentUrl = superBrowser.getPage().currentUrl();
+        System.out.println("currentUrl: " + currentUrl);
     }
 
     @Test

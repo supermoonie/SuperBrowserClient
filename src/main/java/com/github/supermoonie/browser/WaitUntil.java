@@ -1,6 +1,7 @@
 package com.github.supermoonie.browser;
 
 import com.github.supermoonie.event.Event;
+import com.github.supermoonie.exception.LoadTimeOutException;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -16,13 +17,16 @@ public interface WaitUntil {
      *
      * @param url   url
      * @param ms    wait time
-     * @throws InterruptedException e
      */
-    default void navigateUntilLoadFinished(String url, long ms) throws InterruptedException {
+    default void navigateUntilLoadFinished(String url, long ms) {
         CountDownLatch latch = new CountDownLatch(1);
         getThis().addEventListener(Event.loadFinished,  (webSocket, data) -> latch.countDown());
         getThis().getPage().navigate(url);
-        latch.await(ms, TimeUnit.MILLISECONDS);
+        try {
+            latch.await(ms, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+            throw new LoadTimeOutException(e);
+        }
     }
 
     /**
