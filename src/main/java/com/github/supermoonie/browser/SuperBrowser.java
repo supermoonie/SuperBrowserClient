@@ -114,6 +114,7 @@ public class SuperBrowser implements Closeable, WaitUntil {
     public void close() throws IOException {
         getWindow().close();
         webSocket.close(1001, "");
+        webSocketListener.waitConnect(3000, TimeUnit.MILLISECONDS);
     }
 
     @Override

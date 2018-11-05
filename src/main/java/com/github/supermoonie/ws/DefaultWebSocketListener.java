@@ -26,6 +26,8 @@ public class DefaultWebSocketListener extends WebSocketListener {
 
     private CountDownLatch openLatch = new CountDownLatch(1);
 
+    private CountDownLatch closeLatch = new CountDownLatch(1);
+
     private State state;
 
     public DefaultWebSocketListener(Map<Integer, WebSocketContext> contexts, Map<Event, EventListener> eventListeners) {
@@ -33,13 +35,24 @@ public class DefaultWebSocketListener extends WebSocketListener {
         this.eventListeners = eventListeners;
     }
 
-
     public void waitConnect(long timeout, TimeUnit unit) throws ConnectException {
         try {
             long deadline = System.nanoTime() + unit.toNanos(timeout);
             openLatch.await(timeout, unit);
             if (System.nanoTime() > deadline) {
                 throw new ConnectException();
+            }
+        } catch (InterruptedException e) {
+            throw new SuperBrowserException(e);
+        }
+    }
+
+    public void waitClose(long timeout, TimeUnit unit) {
+        try {
+            long deadline = System.nanoTime() + unit.toNanos(timeout);
+            closeLatch.await(timeout, unit);
+            if (System.nanoTime() > deadline) {
+                throw new SuperBrowserException("Could not close web socket!");
             }
         } catch (InterruptedException e) {
             throw new SuperBrowserException(e);
@@ -83,13 +96,12 @@ public class DefaultWebSocketListener extends WebSocketListener {
     @Override
     public void onClosing(WebSocket webSocket, int code, String reason) {
         state = State.Closing;
-        System.out.println("closing");
     }
 
     @Override
     public void onClosed(WebSocket webSocket, int code, String reason) {
         state = State.Closed;
-        System.out.println("closed");
+        closeLatch.countDown();
     }
 
     @Override
