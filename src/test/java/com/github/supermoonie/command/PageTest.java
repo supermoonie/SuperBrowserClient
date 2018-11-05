@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.net.ConnectException;
+import java.nio.file.Paths;
 
 /**
  * @author supermoonie
@@ -15,7 +16,8 @@ public class PageTest {
     @Test
     public void navigate() throws ConnectException {
         SuperBrowser superBrowser = new SuperBrowser();
-        superBrowser.getPage().navigate("http://httpbin.org/get");
+        String path = Paths.get("src/test/resources/PromptTest.html").toAbsolutePath().toUri().toString();
+        superBrowser.getPage().navigate(path);
     }
 
     @Test
