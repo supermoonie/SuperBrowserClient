@@ -1,7 +1,7 @@
 package com.github.supermoonie.browser;
 
 import com.github.supermoonie.event.Event;
-import com.github.supermoonie.exception.LoadTimeOutException;
+import com.github.supermoonie.exception.*;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -16,24 +16,48 @@ public interface WaitUntil {
      * navigate until load finished
      *
      * @param url   url
-     * @param ms    wait time
+     * @param timeout    wait time
+     * @return  SuperBrowser
      */
-    default void navigateUntilLoadFinished(String url, long ms) {
+    default SuperBrowser navigateUntilLoadFinished(String url, long timeout) {
         CountDownLatch latch = new CountDownLatch(1);
         long start = System.currentTimeMillis();
         getThis().addEventListener(Event.loadFinished,  (webSocket, data) -> latch.countDown());
         getThis().getPage().navigate(url);
         try {
-            latch.await(ms, TimeUnit.MILLISECONDS);
-            if (System.currentTimeMillis() - start >= ms) {
-                throw new LoadTimeOutException("Page not load finish in " + ms + " milliseconds");
+            latch.await(timeout, TimeUnit.MILLISECONDS);
+            if (System.currentTimeMillis() - start >= timeout) {
+                throw new LoadTimeOutException("Page not load finish in " + timeout + " milliseconds");
             }
         } catch (InterruptedException e) {
             throw new LoadTimeOutException(e);
         }
+        return getThis();
     }
 
+    /**
+     * navigate until alert
+     * @param url       url
+     * @param timeout   timeout
+     * @return  SuperBrowser
+     */
+    default SuperBrowser navigateUntilAlert(String url, long timeout) {
+        if (getThis().getWindow().hasAlert()) {
+            throw new AlertExistException();
+        }
+        getThis().getPage().navigate(url);
+        getThis().until(Conditions.hasAlertCondition, timeout);
+        return getThis();
+    }
 
+    default SuperBrowser navigateUntilConfirm(String url, long timeout) {
+        if (getThis().getWindow().hasConfirm()) {
+            throw new ConfirmExistException();
+        }
+        getThis().getPage().navigate(url);
+        getThis().until(Conditions.hasConfirmCondition, timeout);
+        return getThis();
+    }
 
     /**
      * get SuperBrowser

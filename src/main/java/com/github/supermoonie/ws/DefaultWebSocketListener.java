@@ -19,6 +19,8 @@ public class DefaultWebSocketListener extends WebSocketListener {
 
     private final Map<Event, EventListener> eventListeners;
 
+    private State state;
+
     public DefaultWebSocketListener(Map<Integer, WebSocketContext> contexts, Map<Event, EventListener> eventListeners) {
         this.contexts = contexts;
         this.eventListeners = eventListeners;
@@ -26,7 +28,7 @@ public class DefaultWebSocketListener extends WebSocketListener {
 
     @Override
     public void onOpen(WebSocket webSocket, Response response) {
-        System.out.println("open");
+        state = State.Open;
     }
 
     @Override
@@ -45,7 +47,7 @@ public class DefaultWebSocketListener extends WebSocketListener {
         } else if (json.containsKey(idKey)) {
             int id = json.getIntValue(idKey);
             WebSocketContext context = contexts.remove(id);
-            if(null != context) {
+            if (null != context) {
                 String errorKey = "error";
                 if (json.containsKey(errorKey)) {
                     String errorMsg = json.getString(errorKey);
@@ -59,16 +61,45 @@ public class DefaultWebSocketListener extends WebSocketListener {
 
     @Override
     public void onClosing(WebSocket webSocket, int code, String reason) {
+        state = State.Closing;
         System.out.println("closing");
     }
 
     @Override
     public void onClosed(WebSocket webSocket, int code, String reason) {
+        state = State.Closed;
         System.out.println("closed");
     }
 
     @Override
     public void onFailure(WebSocket webSocket, Throwable t, Response response) {
         t.printStackTrace();
+    }
+
+    public boolean isCnnected() {
+        return state != null && state == State.Open;
+    }
+
+    public boolean isClosing() {
+        return state != null && state == State.Closing;
+    }
+
+    public boolean isClosed() {
+        return state != null && state == State.Closed;
+    }
+
+    private enum State {
+        /**
+         * open
+         */
+        Open,
+        /**
+         * closing
+         */
+        Closing,
+        /**
+         * closed
+         */
+        Closed
     }
 }

@@ -20,8 +20,7 @@ public class PageTest {
     @Test
     public void currentUrl() {
         SuperBrowser superBrowser = new SuperBrowser();
-        superBrowser.navigateUntilLoadFinished("http://httpbin.org/get", 5000);
-        String currentUrl = superBrowser.getPage().currentUrl();
+        String currentUrl = superBrowser.navigateUntilLoadFinished("http://httpbin.org/get", 5000).getPage().currentUrl();
         System.out.println("currentUrl: " + currentUrl);
     }
 

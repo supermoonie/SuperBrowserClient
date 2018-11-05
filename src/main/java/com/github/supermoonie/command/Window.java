@@ -15,14 +15,14 @@ public interface Window extends Command {
     /**
      * version
      *
-     * @return  version
+     * @return version
      */
     Version getVersion();
 
     /**
      * getWindowState
      *
-     * @return  WindowState
+     * @return WindowState
      */
     @Returns("state")
     WindowState getWindowState();
@@ -37,31 +37,31 @@ public interface Window extends Command {
     /**
      * getWindowBounds
      *
-     * @return  Bounds
+     * @return Bounds
      */
     Bounds getWindowBounds();
 
     /**
      * setWindowBounds
      *
-     * @param bounds    Bounds
+     * @param bounds Bounds
      */
     void setWindowBounds(@Param("bounds") Bounds bounds);
 
     /**
      * setWindowBounds
      *
-     * @param x     x
-     * @param y     y
-     * @param width     width
-     * @param height    height
+     * @param x      x
+     * @param y      y
+     * @param width  width
+     * @param height height
      */
     void setWindowBounds(@Param("x") int x, @Param("y") int y, @Param("width") int width, @Param("height") int height);
 
     /**
      * hasAlert
      *
-     * @return  is exist
+     * @return is exist
      */
     @Returns("exist")
     boolean hasAlert();
@@ -69,7 +69,7 @@ public interface Window extends Command {
     /**
      * alert text
      *
-     * @return  text
+     * @return text
      */
     @Returns("text")
     String alertText();
@@ -78,6 +78,14 @@ public interface Window extends Command {
      * close alert
      */
     void closeAlert();
+
+    /**
+     * has confirm
+     *
+     * @return  is exist
+     */
+    @Returns("exist")
+    boolean hasConfirm();
 
     /**
      * close

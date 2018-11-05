@@ -63,8 +63,8 @@ public class WindowTest {
     @Test
     public void hasAlert() {
         SuperBrowser superBrowser = new SuperBrowser();
-        String path = Paths.get("src/test/resources/AlertHtml.html").toAbsolutePath().toUri().toString();
-        superBrowser.navigateUntilLoadFinished(path, 5000);
+        String path = Paths.get("src/test/resources/AlertTest.html").toAbsolutePath().toUri().toString();
+        superBrowser.navigateUntilAlert(path, 5000);
         boolean exist = superBrowser.getWindow().hasAlert();
         System.out.println("exist: " + exist);
     }
@@ -72,8 +72,8 @@ public class WindowTest {
     @Test
     public void alertText() {
         SuperBrowser superBrowser = new SuperBrowser();
-        String path = Paths.get("src/test/resources/AlertHtml.html").toAbsolutePath().toUri().toString();
-        superBrowser.navigateUntilLoadFinished(path, 5000);
+        String path = Paths.get("src/test/resources/AlertTest.html").toAbsolutePath().toUri().toString();
+        superBrowser.navigateUntilAlert(path, 5000);
         boolean exist = superBrowser.getWindow().hasAlert();
         if (exist) {
             String text = superBrowser.getWindow().alertText();
@@ -84,14 +84,22 @@ public class WindowTest {
     @Test
     public void closeAlert() {
         SuperBrowser superBrowser = new SuperBrowser();
-        String path = Paths.get("src/test/resources/AlertHtml.html").toAbsolutePath().toUri().toString();
-        superBrowser.navigateUntilLoadFinished(path, 3000);
+        String path = Paths.get("src/test/resources/AlertTest.html").toAbsolutePath().toUri().toString();
+        superBrowser.navigateUntilAlert(path, 3000);
         boolean exist = superBrowser.getWindow().hasAlert();
         if (exist) {
             String text = superBrowser.getWindow().alertText();
             System.out.println("text: " + text);
             superBrowser.getWindow().closeAlert();
         }
+    }
+
+    @Test
+    public void hasConfirm() {
+        SuperBrowser superBrowser = new SuperBrowser();
+        String path = Paths.get("src/test/resources/ConfirmTest.html").toAbsolutePath().toUri().toString();
+        superBrowser.getPage().navigate(path);
+
     }
 
     @Test

@@ -3,6 +3,8 @@ package com.github.supermoonie.browser;
 import com.github.supermoonie.command.*;
 import com.github.supermoonie.event.Event;
 import com.github.supermoonie.event.EventListener;
+import com.github.supermoonie.exception.SuperBrowserException;
+import com.github.supermoonie.exception.TimeOutException;
 import com.github.supermoonie.ws.DefaultWebSocketListener;
 import com.github.supermoonie.ws.WebSocketContext;
 import net.sf.cglib.proxy.Callback;
@@ -71,6 +73,24 @@ public class SuperBrowser implements Closeable, WaitUntil {
 
     public void removeEventListener(Event event) {
         eventListeners.remove(event);
+    }
+
+    public <T> T until(Condition<T> condition, long timeout) {
+        long start = System.currentTimeMillis();
+        do {
+            try {
+                TimeUnit.MILLISECONDS.sleep(300);
+            } catch (InterruptedException e) {
+                throw new SuperBrowserException(e);
+            }
+            T t = condition.apply(this);
+            if (null != t) {
+                return t;
+            }
+            if (System.currentTimeMillis() - start >= timeout) {
+                throw new TimeOutException("Time out");
+            }
+        } while (true);
     }
 
     @Override
