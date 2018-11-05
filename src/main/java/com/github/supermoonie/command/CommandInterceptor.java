@@ -3,6 +3,8 @@ package com.github.supermoonie.command;
 import com.alibaba.fastjson.JSONObject;
 import com.github.supermoonie.annotation.Param;
 import com.github.supermoonie.annotation.Returns;
+import com.github.supermoonie.browser.SuperBrowser;
+import com.github.supermoonie.exception.SuperBrowserException;
 import com.github.supermoonie.ws.WebSocketContext;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
@@ -27,16 +29,22 @@ public class CommandInterceptor implements MethodInterceptor {
 
     private final WebSocket webSocket;
 
+    private final SuperBrowser superBrowser;
+
     private long timeOut;
 
-    public CommandInterceptor(Map<Integer, WebSocketContext> contexts, WebSocket webSocket, long timeOut) {
+    public CommandInterceptor(Map<Integer, WebSocketContext> contexts, WebSocket webSocket, SuperBrowser superBrowser, long timeOut) {
         this.contexts = contexts;
         this.webSocket = webSocket;
+        this.superBrowser = superBrowser;
         this.timeOut = timeOut;
     }
 
     @Override
     public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
+        if (!superBrowser.isConnected()) {
+            throw new SuperBrowserException("WebSocket not connected!");
+        }
         final String command = method.getName();
         int id = counter.incrementAndGet();
         JSONObject json = new JSONObject();
@@ -80,7 +88,7 @@ public class CommandInterceptor implements MethodInterceptor {
         Type genericReturnType = method.getGenericReturnType();
         String returns = method.isAnnotationPresent(Returns.class) ?
                 method.getAnnotation(Returns.class).value() : null;
-        if(null != returns) {
+        if (null != returns) {
             boolean hasReturns = resultJson.containsKey(returns);
             if (hasReturns) {
                 result = resultJson.getObject(returns, genericReturnType);

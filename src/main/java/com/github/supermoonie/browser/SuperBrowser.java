@@ -15,6 +15,7 @@ import okhttp3.WebSocket;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.net.ConnectException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
@@ -27,18 +28,22 @@ public class SuperBrowser implements Closeable, WaitUntil {
 
     private WebSocket webSocket;
 
+    private DefaultWebSocketListener webSocketListener;
+
     private CommandInterceptor invocationHandler;
 
     private final Map<Class, Command> proxies = new ConcurrentHashMap<>();
 
     private final Map<Event, EventListener> eventListeners = new ConcurrentHashMap<>();
 
-    public SuperBrowser() {
+    public SuperBrowser() throws ConnectException {
         OkHttpClient client = new OkHttpClient.Builder().pingInterval(0, TimeUnit.SECONDS).build();
         Request request = new Request.Builder().url("ws://127.0.0.1:9900").build();
         Map<Integer, WebSocketContext> contexts = new ConcurrentHashMap<>();
-        webSocket = client.newWebSocket(request, new DefaultWebSocketListener(contexts, eventListeners));
-        invocationHandler = new CommandInterceptor(contexts, webSocket, 3000);
+        webSocketListener = new DefaultWebSocketListener(contexts, eventListeners);
+        webSocket = client.newWebSocket(request, webSocketListener);
+        webSocketListener.waitConnect(3000, TimeUnit.MILLISECONDS);
+        invocationHandler = new CommandInterceptor(contexts, webSocket, this, 3000);
     }
 
     public Window getWindow() {
@@ -91,6 +96,18 @@ public class SuperBrowser implements Closeable, WaitUntil {
                 throw new TimeOutException("Time out");
             }
         } while (true);
+    }
+
+    public boolean isConnected() {
+        return webSocketListener.isConnected();
+    }
+
+    public boolean isClosing() {
+        return webSocketListener.isClosing();
+    }
+
+    public boolean isClosed() {
+        return webSocketListener.isClosed();
     }
 
     @Override

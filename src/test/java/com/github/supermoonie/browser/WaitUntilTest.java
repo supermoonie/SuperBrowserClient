@@ -2,10 +2,8 @@ package com.github.supermoonie.browser;
 
 import org.junit.Test;
 
-import java.io.IOException;
+import java.net.ConnectException;
 import java.nio.file.Paths;
-
-import static org.junit.Assert.*;
 
 /**
  * @author wangchao
@@ -14,13 +12,13 @@ import static org.junit.Assert.*;
 public class WaitUntilTest {
 
     @Test
-    public void navigateUntilLoadFinished() {
+    public void navigateUntilLoadFinished() throws ConnectException {
         SuperBrowser superBrowser = new SuperBrowser();
         superBrowser.navigateUntilLoadFinished("http://httpbin.org/get", 5000);
     }
 
     @Test
-    public void navigateUntilConfirm() {
+    public void navigateUntilConfirm() throws ConnectException {
         SuperBrowser superBrowser = new SuperBrowser();
         String path = Paths.get("src/test/resources/ConfirmTest.html").toAbsolutePath().toUri().toString();
         superBrowser.navigateUntilConfirm(path, 5000);

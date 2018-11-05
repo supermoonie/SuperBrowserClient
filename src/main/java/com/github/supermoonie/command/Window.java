@@ -82,10 +82,25 @@ public interface Window extends Command {
     /**
      * has confirm
      *
-     * @return  is exist
+     * @return is exist
      */
     @Returns("exist")
     boolean hasConfirm();
+
+    /**
+     * confirm text
+     *
+     * @return text
+     */
+    @Returns("text")
+    String confirmText();
+
+    /**
+     * close confirm
+     *
+     * @param accept is accept
+     */
+    void acceptConfirm(@Param("accept") boolean accept);
 
     /**
      * close

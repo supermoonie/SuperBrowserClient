@@ -3,11 +3,16 @@ package com.github.supermoonie.ws;
 import com.alibaba.fastjson.JSONObject;
 import com.github.supermoonie.event.Event;
 import com.github.supermoonie.event.EventListener;
+import com.github.supermoonie.exception.CommandException;
+import com.github.supermoonie.exception.SuperBrowserException;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 
+import java.net.ConnectException;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author supermoonie
@@ -19,6 +24,8 @@ public class DefaultWebSocketListener extends WebSocketListener {
 
     private final Map<Event, EventListener> eventListeners;
 
+    private CountDownLatch openLatch = new CountDownLatch(1);
+
     private State state;
 
     public DefaultWebSocketListener(Map<Integer, WebSocketContext> contexts, Map<Event, EventListener> eventListeners) {
@@ -26,9 +33,23 @@ public class DefaultWebSocketListener extends WebSocketListener {
         this.eventListeners = eventListeners;
     }
 
+
+    public void waitConnect(long timeout, TimeUnit unit) throws ConnectException {
+        try {
+            long deadline = System.nanoTime() + unit.toNanos(timeout);
+            openLatch.await(timeout, unit);
+            if (System.nanoTime() > deadline) {
+                throw new ConnectException();
+            }
+        } catch (InterruptedException e) {
+            throw new SuperBrowserException(e);
+        }
+    }
+
     @Override
     public void onOpen(WebSocket webSocket, Response response) {
         state = State.Open;
+        openLatch.countDown();
     }
 
     @Override
@@ -51,7 +72,7 @@ public class DefaultWebSocketListener extends WebSocketListener {
                 String errorKey = "error";
                 if (json.containsKey(errorKey)) {
                     String errorMsg = json.getString(errorKey);
-                    context.setError(new Exception("error message: " + errorMsg));
+                    context.setError(new CommandException(errorMsg));
                 } else {
                     context.setData(json);
                 }
@@ -76,7 +97,7 @@ public class DefaultWebSocketListener extends WebSocketListener {
         t.printStackTrace();
     }
 
-    public boolean isCnnected() {
+    public boolean isConnected() {
         return state != null && state == State.Open;
     }
 

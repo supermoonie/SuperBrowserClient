@@ -4,6 +4,7 @@ import com.github.supermoonie.browser.SuperBrowser;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.net.ConnectException;
 
 /**
  * @author supermoonie
@@ -12,13 +13,13 @@ import java.io.IOException;
 public class PageTest {
 
     @Test
-    public void navigate() {
+    public void navigate() throws ConnectException {
         SuperBrowser superBrowser = new SuperBrowser();
         superBrowser.getPage().navigate("http://httpbin.org/get");
     }
 
     @Test
-    public void currentUrl() {
+    public void currentUrl() throws ConnectException {
         SuperBrowser superBrowser = new SuperBrowser();
         String currentUrl = superBrowser.navigateUntilLoadFinished("http://httpbin.org/get", 5000).getPage().currentUrl();
         System.out.println("currentUrl: " + currentUrl);
