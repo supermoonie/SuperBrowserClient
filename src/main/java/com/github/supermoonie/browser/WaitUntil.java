@@ -4,6 +4,7 @@ import com.github.supermoonie.event.Event;
 import com.github.supermoonie.exception.AlertExistException;
 import com.github.supermoonie.exception.ConfirmExistException;
 import com.github.supermoonie.exception.LoadTimeOutException;
+import com.github.supermoonie.exception.PromptExistException;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -45,7 +46,7 @@ public interface WaitUntil {
      * @return SuperBrowser
      */
     default SuperBrowser navigateUntilAlert(String url, long timeout) {
-        if (getThis().getWindow().hasAlert()) {
+        if (getThis().getPage().hasAlert()) {
             throw new AlertExistException();
         }
         getThis().getPage().navigate(url);
@@ -61,11 +62,27 @@ public interface WaitUntil {
      * @return SuperBrowser
      */
     default SuperBrowser navigateUntilConfirm(String url, long timeout) {
-        if (getThis().getWindow().hasConfirm()) {
+        if (getThis().getPage().hasConfirm()) {
             throw new ConfirmExistException();
         }
         getThis().getPage().navigate(url);
         getThis().until(Conditions.hasConfirmCondition, timeout);
+        return getThis();
+    }
+
+    /**
+     * navigate until prompt
+     *
+     * @param url     url
+     * @param timeout timeout
+     * @return SuperBrowser
+     */
+    default SuperBrowser navigateUntilPrompt(String url, long timeout) {
+        if (getThis().getPage().hasPrompt()) {
+            throw new PromptExistException();
+        }
+        getThis().getPage().navigate(url);
+        getThis().until(Conditions.hasPromptCondition, timeout);
         return getThis();
     }
 

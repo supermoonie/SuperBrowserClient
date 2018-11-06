@@ -1,7 +1,6 @@
 package com.github.supermoonie.type.browser;
 
 /**
- *
  * @author Administrator
  * @date 2018/11/2 0002
  */

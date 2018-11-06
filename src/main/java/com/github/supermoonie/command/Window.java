@@ -59,50 +59,6 @@ public interface Window extends Command {
     void setWindowBounds(@Param("x") int x, @Param("y") int y, @Param("width") int width, @Param("height") int height);
 
     /**
-     * hasAlert
-     *
-     * @return is exist
-     */
-    @Returns("exist")
-    boolean hasAlert();
-
-    /**
-     * alert text
-     *
-     * @return text
-     */
-    @Returns("text")
-    String alertText();
-
-    /**
-     * close alert
-     */
-    void closeAlert();
-
-    /**
-     * has confirm
-     *
-     * @return is exist
-     */
-    @Returns("exist")
-    boolean hasConfirm();
-
-    /**
-     * confirm text
-     *
-     * @return text
-     */
-    @Returns("text")
-    String confirmText();
-
-    /**
-     * close confirm
-     *
-     * @param accept is accept
-     */
-    void acceptConfirm(@Param("accept") boolean accept);
-
-    /**
      * close
      */
     void close();

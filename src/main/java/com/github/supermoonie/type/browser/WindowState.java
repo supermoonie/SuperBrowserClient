@@ -28,8 +28,7 @@ public enum WindowState {
     /**
      * active
      */
-    active("active")
-    ;
+    active("active");
 
     private final String value;
 

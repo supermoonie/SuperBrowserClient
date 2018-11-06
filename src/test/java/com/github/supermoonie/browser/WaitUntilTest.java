@@ -18,9 +18,23 @@ public class WaitUntilTest {
     }
 
     @Test
+    public void navigateUntilAlert() throws ConnectException {
+        SuperBrowser superBrowser = new SuperBrowser();
+        String path = Paths.get("src/test/resources/AlertTest.html").toAbsolutePath().toUri().toString();
+        superBrowser.navigateUntilAlert(path, 5000);
+    }
+
+    @Test
     public void navigateUntilConfirm() throws ConnectException {
         SuperBrowser superBrowser = new SuperBrowser();
         String path = Paths.get("src/test/resources/ConfirmTest.html").toAbsolutePath().toUri().toString();
         superBrowser.navigateUntilConfirm(path, 5000);
+    }
+
+    @Test
+    public void navigateUntilPrompt() throws ConnectException {
+        SuperBrowser superBrowser = new SuperBrowser();
+        String path = Paths.get("src/test/resources/PromptTest.html").toAbsolutePath().toUri().toString();
+        superBrowser.navigateUntilPrompt(path, 5000);
     }
 }

@@ -13,7 +13,7 @@ public interface EventListener<T> {
      * when event emitted
      *
      * @param webSocket WebSocket
-     * @param data  data
+     * @param data      data
      */
     void onEvent(WebSocket webSocket, JSONObject data);
 }

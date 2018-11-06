@@ -7,8 +7,6 @@ import com.github.supermoonie.type.browser.WindowState;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.net.ConnectException;
-import java.nio.file.Paths;
 
 /**
  * @author supermoonie
@@ -59,64 +57,6 @@ public class WindowTest {
         superBrowser.getWindow().setWindowBounds(bounds);
         superBrowser.getWindow().setWindowBounds(0, 0, 800, 600);
         superBrowser.close();
-    }
-
-    @Test
-    public void hasAlert() throws ConnectException {
-        SuperBrowser superBrowser = new SuperBrowser();
-        String path = Paths.get("src/test/resources/AlertTest.html").toAbsolutePath().toUri().toString();
-        superBrowser.navigateUntilAlert(path, 5000);
-        boolean exist = superBrowser.getWindow().hasAlert();
-        System.out.println("exist: " + exist);
-    }
-
-    @Test
-    public void alertText() throws ConnectException {
-        SuperBrowser superBrowser = new SuperBrowser();
-        String path = Paths.get("src/test/resources/AlertTest.html").toAbsolutePath().toUri().toString();
-        superBrowser.navigateUntilAlert(path, 5000);
-        boolean exist = superBrowser.getWindow().hasAlert();
-        if (exist) {
-            String text = superBrowser.getWindow().alertText();
-            System.out.println("text: " + text);
-        }
-    }
-
-    @Test
-    public void closeAlert() throws ConnectException {
-        SuperBrowser superBrowser = new SuperBrowser();
-        String path = Paths.get("src/test/resources/AlertTest.html").toAbsolutePath().toUri().toString();
-        superBrowser.navigateUntilAlert(path, 3000);
-        boolean exist = superBrowser.getWindow().hasAlert();
-        if (exist) {
-            String text = superBrowser.getWindow().alertText();
-            System.out.println("text: " + text);
-            superBrowser.getWindow().closeAlert();
-        }
-    }
-
-    @Test
-    public void hasConfirm() throws ConnectException {
-        SuperBrowser superBrowser = new SuperBrowser();
-        String path = Paths.get("src/test/resources/ConfirmTest.html").toAbsolutePath().toUri().toString();
-        superBrowser.navigateUntilConfirm(path, 5000);
-    }
-
-    @Test
-    public void confirmText() throws ConnectException {
-        SuperBrowser superBrowser = new SuperBrowser();
-        String path = Paths.get("src/test/resources/ConfirmTest.html").toAbsolutePath().toUri().toString();
-        superBrowser.navigateUntilConfirm(path, 5000);
-        String text = superBrowser.getWindow().confirmText();
-        System.out.println("text: " + text);
-    }
-
-    @Test
-    public void acceptConfirm() throws ConnectException {
-        SuperBrowser superBrowser = new SuperBrowser();
-        String path = Paths.get("src/test/resources/ConfirmTest.html").toAbsolutePath().toUri().toString();
-        superBrowser.navigateUntilConfirm(path, 5000);
-        superBrowser.getWindow().acceptConfirm(false);
     }
 
     @Test
