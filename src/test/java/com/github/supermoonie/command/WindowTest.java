@@ -1,9 +1,9 @@
 package com.github.supermoonie.command;
 
 import com.github.supermoonie.browser.SuperBrowser;
-import com.github.supermoonie.type.browser.Bounds;
-import com.github.supermoonie.type.browser.Version;
-import com.github.supermoonie.type.browser.WindowState;
+import com.github.supermoonie.type.window.Bounds;
+import com.github.supermoonie.type.window.Version;
+import com.github.supermoonie.type.window.WindowState;
 import org.junit.Test;
 
 import java.io.IOException;

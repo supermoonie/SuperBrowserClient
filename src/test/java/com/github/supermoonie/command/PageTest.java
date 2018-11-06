@@ -1,11 +1,17 @@
 package com.github.supermoonie.command;
 
 import com.github.supermoonie.browser.SuperBrowser;
+import com.github.supermoonie.type.page.ImageFormat;
+import com.github.supermoonie.type.page.ScrollBarPolicy;
+import com.github.supermoonie.type.page.Viewport;
+import jdk.nashorn.internal.scripts.JO;
 import org.junit.Test;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.nio.file.Paths;
+import java.util.Base64;
 
 /**
  * @author supermoonie
@@ -128,5 +134,35 @@ public class PageTest {
         SuperBrowser superBrowser = new SuperBrowser();
         String text = superBrowser.navigateUntilLoadFinished("http://httpbin.org/get", 5000).getPage().toPlainText();
         System.out.println("text: " + text);
+    }
+
+    @Test
+    public void setScrollBarPolicy() throws ConnectException {
+        SuperBrowser superBrowser = new SuperBrowser();
+        superBrowser.navigateUntilLoadFinished("https://ip.cn", 10000);
+        superBrowser.getPage().setScrollBarPolicy(ScrollBarPolicy.ScrollBarAlwaysOff, ScrollBarPolicy.ScrollBarAlwaysOff);
+    }
+
+    @Test
+    public void captureScreenshot() throws ConnectException {
+        SuperBrowser superBrowser = new SuperBrowser();
+        superBrowser.navigateUntilLoadFinished("https://ip.cn", 5000);
+        superBrowser.getPage().setScrollBarPolicy(ScrollBarPolicy.ScrollBarAlwaysOff, ScrollBarPolicy.ScrollBarAlwaysOff);
+        Viewport viewport = new Viewport();
+        viewport.setX(0);
+        viewport.setY(0);
+        viewport.setHeight(500);
+        viewport.setWidth(500);
+        byte[] base64Image = Base64.getDecoder().decode(superBrowser.getPage().captureScreenshot(ImageFormat.Png, 20, viewport));
+        JOptionPane.showMessageDialog(null, "", "Image", JOptionPane.INFORMATION_MESSAGE, new ImageIcon(base64Image));
+    }
+
+    @Test
+    public void captureFullScreen() throws ConnectException {
+        SuperBrowser superBrowser = new SuperBrowser();
+        superBrowser.navigateUntilLoadFinished("https://ip.cn", 5000);
+        superBrowser.getPage().setScrollBarPolicy(ScrollBarPolicy.ScrollBarAlwaysOff, ScrollBarPolicy.ScrollBarAlwaysOff);
+        byte[] base64Image = Base64.getDecoder().decode(superBrowser.getPage().captureScreenshot(true));
+        JOptionPane.showMessageDialog(null, "", "Image", JOptionPane.INFORMATION_MESSAGE, new ImageIcon(base64Image));
     }
 }

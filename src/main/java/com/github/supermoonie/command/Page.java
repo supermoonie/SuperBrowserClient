@@ -2,6 +2,9 @@ package com.github.supermoonie.command;
 
 import com.github.supermoonie.annotation.Param;
 import com.github.supermoonie.annotation.Returns;
+import com.github.supermoonie.type.page.ImageFormat;
+import com.github.supermoonie.type.page.ScrollBarPolicy;
+import com.github.supermoonie.type.page.Viewport;
 
 /**
  * @author supermoonie
@@ -128,4 +131,32 @@ public interface Page extends Command {
      */
     @Returns("text")
     String toPlainText();
+
+    /**
+     * set scrollbar policy
+     *
+     * @param horizontalPolicy horizontal policy
+     * @param verticalPolicy   vertical policy
+     */
+    void setScrollBarPolicy(@Param("horizontalPolicy") ScrollBarPolicy horizontalPolicy, @Param("verticalPolicy") ScrollBarPolicy verticalPolicy);
+
+    /**
+     * captureScreenshot
+     *
+     * @param format  format
+     * @param quality quality [0-100]
+     * @param clip    viewport
+     * @return base-encoded image
+     */
+    @Returns("data")
+    String captureScreenshot(@Param("format") ImageFormat format, @Param("quality") int quality, @Param("clip") Viewport clip);
+
+    /**
+     * captureScreenshot
+     *
+     * @param fullScreen is fullScreen
+     * @return base-encoded image
+     */
+    @Returns("data")
+    String captureScreenshot(@Param("fullScreen") boolean fullScreen);
 }

@@ -1,4 +1,4 @@
-package com.github.supermoonie.type.browser;
+package com.github.supermoonie.type.window;
 
 /**
  * @author supermoonie

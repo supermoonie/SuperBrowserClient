@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
  * @author supermoonie
  * @date 2018/11/2 11:21
  */
-public class SuperBrowser implements Closeable, WaitUntil {
+public class SuperBrowser implements Closeable, WaitUntil, Screenshot {
 
     private WebSocket webSocket;
 
